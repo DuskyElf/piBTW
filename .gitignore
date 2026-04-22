@@ -1,0 +1,3 @@
+# Sensitive files added by Pi assistant
+agent/auth.json
+agent/sessions/
