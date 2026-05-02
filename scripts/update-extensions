@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# Update pi extensions in dotfiles
+# WARNING: git reset --hard will OVERWRITE any local changes to the extension!
+# Back up custom modifications before running.
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+DOTFILES_DIR="$(dirname "$SCRIPT_DIR")"
+EXT_DIR="$DOTFILES_DIR/extensions"
+
+echo "Updating pi-web-access..."
+cd "$EXT_DIR/pi-web-access"
+
+# Fetch and pull latest
+git fetch origin main
+git reset --hard origin/main
+
+# Re-register extension (also picks up any bundled skills)
+cd "$DOTFILES_DIR"
+pi install ./extensions/pi-web-access -l
+
+echo "Done! Restart pi to load the new version."
