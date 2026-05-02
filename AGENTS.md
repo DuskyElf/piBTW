@@ -24,8 +24,7 @@ This directory (`~/.pi` → `piBTW/`) is a **symlink trick** to share pi config 
 
 ## Directories
 
-- `agent/` - pi agent data (auth, settings, sessions)
-- `extensions/` - pi extensions installed locally
+- `agent/` - pi agent data (auth, extensions, settings, sessions)
 - `scripts/` - utility scripts for dotfiles management
 
 ## How to update extensions
