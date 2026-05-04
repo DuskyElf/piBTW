@@ -13,7 +13,7 @@ This directory (`~/.pi` → `piBTW/`) is a **symlink trick** to share pi config 
    ```
    This creates `~/.pi` → `~/dotfiles/piBTW`
 
-3. **Result**: When pi starts, it reads from `~/.pi` which transparently follows into this directory in the Nix dotfiles repo.
+3. **Result**: When pi starts, it reads from `~/.pi` which transparently follows into this directory.
 
 ## Why this exists
 
@@ -29,9 +29,23 @@ This directory (`~/.pi` → `piBTW/`) is a **symlink trick** to share pi config 
 
 ## How to update extensions
 
-Run the update script to sync extensions with the latest upstream:
-
 ```bash
 ./scripts/update-extensions
 ```
-After running, tell the user to /reload pi to load the new version.
+After running, tell the user to /reload pi.
+
+## How to add extensions
+
+On nix-managed machines, `pi install` won't work. Clone the extension repo directly into `agent/extensions` as a subrepo:
+
+```bash
+cd agent/extensions
+git clone --depth 1 <repo-url>
+cd <extension-folder>
+npm install
+```
+then /reload pi.
+
+## Currently installed extensions
+
+- `pi-web-access` - Web search, URL fetching, GitHub repo cloning, PDF extraction, YouTube video understanding
