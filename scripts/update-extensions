@@ -3,15 +3,71 @@
 # WARNING: git reset --hard will OVERWRITE any local changes to the extension!
 # Back up custom modifications before running.
 
+set -euo pipefail
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DOTFILES_DIR="$(dirname "$SCRIPT_DIR")"
 EXT_DIR="$DOTFILES_DIR/agent/extensions"
 
-echo "Updating pi-web-access..."
-cd "$EXT_DIR/pi-web-access"
+SUCCESS=()
+FAILED=()
 
-# Fetch and pull latest
-git fetch origin main
-git reset --hard origin/main
+for ext in pi-web-access pi-subagents; do
+  if [ ! -d "$EXT_DIR/$ext" ]; then
+    echo "Skipping $ext (not found)"
+    continue
+  fi
+
+  echo "Updating $ext..."
+  cd "$EXT_DIR/$ext"
+
+  # Determine which remote branch exists
+  BRANCH=""
+  if git ls-remote --exit-code origin main >/dev/null 2>&1; then
+    BRANCH="main"
+  elif git ls-remote --exit-code origin master >/dev/null 2>&1; then
+    BRANCH="master"
+  else
+    echo "ERROR: No origin/main or origin/master found for $ext" >&2
+    FAILED+=("$ext")
+    continue
+  fi
+
+  # Fetch and reset with explicit error checking
+  if ! git fetch origin "$BRANCH"; then
+    echo "ERROR: git fetch failed for $ext" >&2
+    FAILED+=("$ext")
+    continue
+  fi
+
+  if ! git reset --hard "origin/$BRANCH"; then
+    echo "ERROR: git reset failed for $ext" >&2
+    FAILED+=("$ext")
+    continue
+  fi
+
+  # Reinstall dependencies (git reset --hard removes node_modules)
+  if [ -f package.json ]; then
+    echo "Installing dependencies for $ext..."
+    if ! npm install; then
+      echo "ERROR: npm install failed for $ext" >&2
+      FAILED+=("$ext")
+      continue
+    fi
+  fi
+
+  echo "Updated $ext"
+  SUCCESS+=("$ext")
+done
+
+echo ""
+echo "=== Summary ==="
+echo "Succeeded: ${SUCCESS[*]:-none}"
+echo "Failed: ${FAILED[*]:-none}"
+
+if [ ${#FAILED[@]} -gt 0 ]; then
+  echo "Some extensions failed - check errors above"
+  exit 1
+fi
 
 echo "Done! Restart pi to load the new version."

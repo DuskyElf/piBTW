@@ -49,3 +49,4 @@ then /reload pi.
 ## Currently installed extensions
 
 - `pi-web-access` - Web search, URL fetching, GitHub repo cloning, PDF extraction, YouTube video understanding
+- `pi-subagents` - Delegate work to child agents (scout, researcher, planner, worker, reviewer, oracle, delegate)
