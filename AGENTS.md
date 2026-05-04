@@ -43,6 +43,8 @@ cd agent/extensions
 git clone --depth 1 <repo-url>
 cd <extension-folder>
 npm install
+# Link any skills so pi discovers them
+ln -sf ../extensions/<ext>/skills/<name> agent/skills/<name>
 ```
 then /reload pi.
 
