@@ -50,3 +50,17 @@ After running, tell the user to /reload pi.
 - `pi-web-access` - Web search, URL fetching, GitHub repo cloning, PDF extraction, YouTube video understanding
 - `pi-subagents` - Delegate work to child agents (scout, researcher, planner, worker, reviewer, oracle, delegate)
 - `pi-context-prune` - Context management (planning, release skills)
+
+## Agent skills
+
+### Issue tracker
+
+Local markdown issues under `.scratch/` in this repo. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Uses canonical labels: needs-triage, needs-info, ready-for-agent, ready-for-human, wontfix. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context: one `CONTEXT.md` + `docs/adr/` at the repo root. See `docs/agents/domain.md`.
