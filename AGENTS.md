@@ -15,30 +15,9 @@ This directory (`~/.pi` → `piBTW/`) is a **symlink trick** to share pi config 
 
 3. **Result**: When pi starts, it reads from `~/.pi` which transparently follows into this directory.
 
-## Directory Structure
-
-```
-piBTW/
-├── agent/              # pi agent data
-│   ├── extensions/    # → symlinks to libs/
-│   ├── skills/       # → symlinks to libs/ or extension skills
-│   ├── settings.json
-│   └── sessions/
-├── libs/              # External libs as git submodules
-│   ├── skills/       # → shared skills (submodule)
-│   ├── pi-context-prune/
-│   ├── pi-subagents/
-│   └── pi-web-access/
-└── scripts/           # Utility scripts
-```
-
 ## Extensions Location
 
-All extensions live in `libs/` as **git submodules** and are symlinked to `agent/extensions/` for pi compatibility:
-
-- `libs/pi-web-access` → `agent/extensions/pi-web-access`
-- `libs/pi-subagents` → `agent/extensions/pi-subagents`
-- `libs/pi-context-prune` → `agent/extensions/pi-context-prune`
+All extensions live in `libs/` as **git submodules** and are symlinked to `agent/extensions/` or `agent/skills/` for pi discovery:
 
 ## How to update extensions
 
