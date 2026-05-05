@@ -1,3 +1,6 @@
+[submodule "libs/skills"]
+	path = libs/skills
+	url = https://github.com/mattpocock/skills
 [submodule "libs/pi-context-prune"]
 	path = libs/pi-context-prune
 	url = https://github.com/championswimmer/pi-context-prune
