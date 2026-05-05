@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # Update pi extensions in dotfiles
+# Extensions live in libs/ as submodules and are symlinked to agent/extensions/
 # WARNING: git reset --hard will OVERWRITE any local changes to the extension!
 # Back up custom modifications before running.
 
@@ -7,19 +8,34 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DOTFILES_DIR="$(dirname "$SCRIPT_DIR")"
-EXT_DIR="$DOTFILES_DIR/agent/extensions"
+LIBS_DIR="$DOTFILES_DIR/libs"
 
 SUCCESS=()
 FAILED=()
 
-for ext in pi-web-access pi-subagents; do
-  if [ ! -d "$EXT_DIR/$ext" ]; then
-    echo "Skipping $ext (not found)"
+# All extensions now live in libs/ as submodules
+EXTENSIONS=(
+  "pi-web-access"
+  "pi-subagents"
+  "pi-context-prune"
+)
+
+for ext in "${EXTENSIONS[@]}"; do
+  ext_path="$LIBS_DIR/$ext"
+
+  if [ ! -d "$ext_path" ]; then
+    echo "Skipping $ext (not found at $ext_path)"
+    continue
+  fi
+
+  # Skip if it's a symlink (shouldn't happen, but safety check)
+  if [ -L "$ext_path" ]; then
+    echo "Skipping $ext (is a symlink, skipping)"
     continue
   fi
 
   echo "Updating $ext..."
-  cd "$EXT_DIR/$ext"
+  cd "$ext_path"
 
   # Determine which remote branch exists
   BRANCH=""
@@ -70,4 +86,5 @@ if [ ${#FAILED[@]} -gt 0 ]; then
   exit 1
 fi
 
+echo ""
 echo "Done! Restart pi to load the new version."

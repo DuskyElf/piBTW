@@ -15,17 +15,30 @@ This directory (`~/.pi` → `piBTW/`) is a **symlink trick** to share pi config 
 
 3. **Result**: When pi starts, it reads from `~/.pi` which transparently follows into this directory.
 
-## Why this exists
+## Directory Structure
 
-- pi stores config in `~/.pi` by default
-- User wants all dotfiles in Nix-managed `~/dotfiles`
-- The symlink bridges "where pi expects its config" → "where Nix puts dotfiles"
-- Changes here sync via git to the piBTW repo
+```
+piBTW/
+├── agent/              # pi agent data
+│   ├── extensions/    # → symlinks to libs/
+│   ├── skills/       # → symlinks to libs/ or extension skills
+│   ├── settings.json
+│   └── sessions/
+├── libs/              # External libs as git submodules
+│   ├── skills/       # → shared skills (submodule)
+│   ├── pi-context-prune/
+│   ├── pi-subagents/
+│   └── pi-web-access/
+└── scripts/           # Utility scripts
+```
 
-## Directories
+## Extensions Location
 
-- `agent/` - pi agent data (auth, extensions, settings, sessions)
-- `scripts/` - utility scripts for dotfiles management
+All extensions live in `libs/` as **git submodules** and are symlinked to `agent/extensions/` for pi compatibility:
+
+- `libs/pi-web-access` → `agent/extensions/pi-web-access`
+- `libs/pi-subagents` → `agent/extensions/pi-subagents`
+- `libs/pi-context-prune` → `agent/extensions/pi-context-prune`
 
 ## How to update extensions
 
@@ -36,19 +49,25 @@ After running, tell the user to /reload pi.
 
 ## How to add extensions
 
-On nix-managed machines, `pi install` won't work. Clone the extension repo directly into `agent/extensions` as a subrepo:
+1. **Clone into libs/** as a submodule:
+   ```bash
+   git submodule add <repo-url> libs/<extension-name>
+   ```
 
-```bash
-cd agent/extensions
-git clone --depth 1 <repo-url>
-cd <extension-folder>
-npm install
-# Link any skills so pi discovers them
-ln -sf ../extensions/<ext>/skills/<name> agent/skills/<name>
-```
-then /reload pi.
+2. **Symlink to agent/extensions/** for pi discovery:
+   ```bash
+   ln -s ../libs/<extension-name> agent/extensions/<extension-name>
+   ```
+
+3. **Link any skills** (if extension has `.agents/skills/` or `skills/`):
+   ```bash
+   ln -sf ../libs/<extension-name>/skills/<skill-name> agent/skills/<skill-name>
+   ```
+
+4. **Reload pi**: tell user to /reload pi
 
 ## Currently installed extensions
 
 - `pi-web-access` - Web search, URL fetching, GitHub repo cloning, PDF extraction, YouTube video understanding
 - `pi-subagents` - Delegate work to child agents (scout, researcher, planner, worker, reviewer, oracle, delegate)
+- `pi-context-prune` - Context management (planning, release skills)
