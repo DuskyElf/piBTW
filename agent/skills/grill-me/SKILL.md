@@ -10,7 +10,7 @@ This skill forces a deep questioning session to reach shared understanding befor
 ## Process
 
 - **Interview relentlessly** - Ask questions about every aspect of the plan until you reach a shared understanding. Don't assume anything.
-- **Walk the design tree** - For each design decision, explore all branches:
+- **Walk the design tree one by one** - For each design decision, explore all branches:
    - What happens if you choose Option A?
    - What are the dependencies?
    - What happens if you choose Option B instead?
