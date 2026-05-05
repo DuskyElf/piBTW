@@ -1,7 +1,7 @@
 {
   "lastChangelogVersion": "0.67.68",
-  "defaultProvider": "github-copilot",
-  "defaultModel": "gemini-3.1-pro-preview",
+  "defaultProvider": "opencode",
+  "defaultModel": "minimax-m2.5-free",
   "defaultThinkingLevel": "medium",
   "enabledModels": [
     "opencode/minimax-m2.5-free",
