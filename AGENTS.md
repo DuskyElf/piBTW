@@ -62,4 +62,4 @@ Uses canonical labels: needs-triage, needs-info, ready-for-agent, ready-for-huma
 
 ### Domain docs
 
-Single-context: one `CONTEXT.md` at the repo root. See `docs/adr/` for architectural decisions.
+Single-context: one `CONTEXT.md` at the repo root — the domain glossary defining canonical terminology. See `docs/adr/` for architectural decisions.
