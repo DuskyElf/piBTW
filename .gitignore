@@ -3,4 +3,3 @@ agent/auth.json
 agent/sessions/
 web-search.json
 agent/run-history.jsonl
-agent/intercom/
