@@ -1,12 +1,15 @@
 {
-  "lastChangelogVersion": "0.67.68",
-  "defaultProvider": "opencode",
-  "defaultModel": "minimax-m2.5-free",
+  "lastChangelogVersion": "0.73.0",
+  "defaultProvider": "cerebras",
+  "defaultModel": "zai-glm-4.7",
   "defaultThinkingLevel": "medium",
   "enabledModels": [
-    "opencode/minimax-m2.5-free",
     "opencode/big-pickle",
+    "cerebras/gpt-oss-120b",
+    "cerebras/zai-glm-4.7",
+    "cerebras/qwen-3-235b-a22b-instruct-2507",
     "github-copilot/gpt-5.4-mini",
     "github-copilot/gemini-3.1-pro-preview"
-  ]
+  ],
+  "hideThinkingBlock": false
 }

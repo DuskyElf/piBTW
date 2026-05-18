@@ -1,8 +1,9 @@
 {
   "enabled": true,
   "showPruneStatusLine": true,
-  "summarizerModel": "opencode/minimax-m2.5-free",
-  "summarizerThinking": "off",
-  "pruneOn": "agent-message",
-  "remindUnprunedCount": true
+  "summarizerModel": "default",
+  "summarizerThinking": "minimal",
+  "pruneOn": "on-demand",
+  "remindUnprunedCount": true,
+  "batchingMode": "turn"
 }
