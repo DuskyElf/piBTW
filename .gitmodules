@@ -4,12 +4,6 @@
 [submodule "libs/pi-context-prune"]
 	path = libs/pi-context-prune
 	url = https://github.com/championswimmer/pi-context-prune
-[submodule "libs/pi-subagents"]
-	path = libs/pi-subagents
-	url = https://github.com/nicobailon/pi-subagents.git
 [submodule "libs/pi-web-access"]
 	path = libs/pi-web-access
 	url = https://github.com/nicobailon/pi-web-access.git
-[submodule "libs/pi-intercom"]
-	path = libs/pi-intercom
-	url = https://github.com/nicobailon/pi-intercom
