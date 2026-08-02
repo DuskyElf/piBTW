@@ -1,8 +1,8 @@
 {
   "lastChangelogVersion": "0.83.0",
-  "defaultProvider": "cerebras",
-  "defaultModel": "gemma-4-31b",
-  "defaultThinkingLevel": "off",
+  "defaultProvider": "opencode",
+  "defaultModel": "big-pickle",
+  "defaultThinkingLevel": "minimal",
   "retry": {
     "enabled": true,
     "maxRetries": 5,
