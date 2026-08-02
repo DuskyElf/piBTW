@@ -63,3 +63,16 @@ Uses canonical labels: needs-triage, needs-info, ready-for-agent, ready-for-huma
 ### Domain docs
 
 Single-context: one `CONTEXT.md` at the repo root — the domain glossary defining canonical terminology. See `docs/adr/` for architectural decisions.
+
+## Free-model config updates (opencode)
+
+`opencode.json` at repo root → installed to `~/.config/opencode/opencode.json`. Free models change often; re-verify before editing.
+
+**Where to look (source of truth, in order):**
+- Zen free model IDs + pricing: `opencode.ai/docs/zen/` (ids end in `-free`, all limited-time, data may train the model)
+- Full catalog w/ pricing: `models.dev/api.json` (free = input/output cost 0)
+- Cerebras models + rate limits: `inference-docs.cerebras.ai/llms-full.txt` (free tier ~30 RPM / 1M TPD)
+
+Current picks: default `opencode/deepseek-v4-flash-free`, fast alt `cerebras/gpt-oss-120b` (only production model, ~3000 tok/s, set `limit: 30`), titles `opencode/north-mini-code-free`. Keys: `OPENCODE_API_KEY`, `CEREBRAS_API_KEY`. Per-model reasoning maps (7 levels: off/minimal/low/medium/high/xhigh/max) overridable in `agent/models.json` → `providers.<id>.modelOverrides.<model>.thinkingLevelMap`.
+
+**Sandbox quirk:** curl/wget die on bwrap in this env — use `node -e` + `https.get`.

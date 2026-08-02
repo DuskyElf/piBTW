@@ -1,15 +1,27 @@
 {
-  "lastChangelogVersion": "0.80.3",
-  "defaultProvider": "opencode",
-  "defaultModel": "big-pickle",
-  "defaultThinkingLevel": "medium",
+  "lastChangelogVersion": "0.83.0",
+  "defaultProvider": "cerebras",
+  "defaultModel": "gemma-4-31b",
+  "defaultThinkingLevel": "off",
+  "retry": {
+    "enabled": true,
+    "maxRetries": 5,
+    "baseDelayMs": 2000,
+    "provider": {
+      "maxRetryDelayMs": 90000
+    }
+  },
   "enabledModels": [
     "opencode/big-pickle",
+    "opencode/deepseek-v4-flash-free",
+    "opencode/mimo-v2.5-free",
+    "opencode/laguna-s-2.1-free",
+    "opencode/ling-3.0-flash-free",
+    "opencode/north-mini-code-free",
+    "opencode/nemotron-3-ultra-free",
     "cerebras/gpt-oss-120b",
     "cerebras/zai-glm-4.7",
-    "cerebras/qwen-3-235b-a22b-instruct-2507",
-    "github-copilot/gpt-5.4-mini",
-    "github-copilot/gemini-3.1-pro-preview"
+    "cerebras/gemma-4-31b"
   ],
   "hideThinkingBlock": false,
   "theme": "dark"
