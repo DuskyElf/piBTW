@@ -51,18 +51,28 @@ export default function (pi: ExtensionAPI) {
 	/** Throttle so per-token events don't trigger a redraw every frame. */
 	let lastRender = 0;
 	let queued = false;
+	/** The pending 100ms throttle timer, so it can be cleared on session shutdown. */
+	let pendingTimer: ReturnType<typeof setTimeout> | undefined;
 
 	function render(ctx: ExtensionContext) {
-		const usage = ctx.getContextUsage();
-		const window = usage?.contextWindow ?? ctx.model?.contextWindow ?? 0;
-		const baseTokens = usage?.tokens ?? 0;
-		const liveTokens = baseTokens + streamedOutput;
-		const percent = window > 0 ? (liveTokens / window) * 100 : 0;
+		// The ctx is invalid after a session replacement or reload. Any access to
+		// a stale ctx (e.g. a throttled timer firing after /new, /fork, or /handoff)
+		// throws, and an uncaught throw here crashes pi. Guard so a stale render is
+		// a silent no-op instead of a fatal error.
+		try {
+			const usage = ctx.getContextUsage();
+			const window = usage?.contextWindow ?? ctx.model?.contextWindow ?? 0;
+			const baseTokens = usage?.tokens ?? 0;
+			const liveTokens = baseTokens + streamedOutput;
+			const percent = window > 0 ? (liveTokens / window) * 100 : 0;
 
-		const parts: string[] = [];
-		parts.push(`ctx ${percent.toFixed(1)}% · ${formatTokens(liveTokens)}/${formatTokens(window)}`);
-		if (streamedOutput > 0) parts.push(`out ${formatTokens(streamedOutput)}`);
-		if (ctx.hasUI) ctx.ui.setStatus("token-meter", parts.join(" "));
+			const parts: string[] = [];
+			parts.push(`ctx ${percent.toFixed(1)}% · ${formatTokens(liveTokens)}/${formatTokens(window)}`);
+			if (streamedOutput > 0) parts.push(`out ${formatTokens(streamedOutput)}`);
+			if (ctx.hasUI) ctx.ui.setStatus("token-meter", parts.join(" "));
+		} catch {
+			// stale ctx — ignore
+		}
 	}
 
 	/** Coalesce the per-token burst into at most ~1 render per 100ms. */
@@ -73,8 +83,9 @@ export default function (pi: ExtensionAPI) {
 			render(ctx);
 		} else if (!queued) {
 			queued = true;
-			setTimeout(() => {
+			pendingTimer = setTimeout(() => {
 				queued = false;
+				pendingTimer = undefined;
 				render(ctx);
 			}, 100);
 		}
@@ -111,9 +122,20 @@ export default function (pi: ExtensionAPI) {
 		render(ctx);
 	});
 
-	// Clear the status on shutdown so a stale value never lingers.
+	// Clear the status on shutdown so a stale value never lingers. Also cancel any
+	// pending throttle timer — otherwise it fires after the extension ctx has been
+	// invalidated by the session replacement and crashes pi.
 	pi.on("session_shutdown", (_event, ctx) => {
+		if (pendingTimer) {
+			clearTimeout(pendingTimer);
+			pendingTimer = undefined;
+		}
+		queued = false;
 		streamedOutput = 0;
-		if (ctx.hasUI) ctx.ui.setStatus("token-meter", undefined);
+		try {
+			if (ctx.hasUI) ctx.ui.setStatus("token-meter", undefined);
+		} catch {
+			// stale ctx — ignore
+		}
 	});
 }
