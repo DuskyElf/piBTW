@@ -36,7 +36,7 @@ import type {
  * agent to write a file; output stays in-memory.
  */
 const HANDOFF_BODY = `Your context is filling up, write down all the context to a handoff document, and I'll restart the session with that context.
-Output the complete handoff document as your response text. Do NOT write any file to disk.`;
+Output the complete handoff document as your response text ONLY, no surrounding text. Do NOT write any file to disk.`;
 
 /** Assemble the user message that prompts the agent to produce the document. */
 function buildPrompt(args: string): string {
