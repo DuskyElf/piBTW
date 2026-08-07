@@ -64,6 +64,16 @@ Uses canonical labels: needs-triage, needs-info, ready-for-agent, ready-for-huma
 
 Single-context: one `CONTEXT.md` at the repo root — the domain glossary defining canonical terminology. See `docs/adr/` for architectural decisions.
 
+## pi extension authoring
+
+Gotchas from debugging `agent/extensions/*.ts` against pi's ExtensionAPI. The installed `.d.ts` is the source of truth, not docs — read it in the Nix store:
+`/nix/store/*-pi-coding-agent-*/lib/node_modules/pi-monorepo/dist/core/extensions/types.d.ts` (ExtensionAPI, events, deliverAs; spans `@earendil-works/pi-agent-core`, `pi-ai`, `pi-tui`).
+
+- `pi.sendUserMessage()/sendMessage()` THROW `"Agent is already processing"` while the agent is streaming unless you pass `{ deliverAs: "steer" | "followUp" }`. steer = interrupt + queue into the current run; followUp = process after current work. In an idle agent the option is ignored.
+- A queued steer is drained into the SAME running loop, so `agent_start` resets `turnIndex` to 0 per run (`core/agent-session.js:_emitExtensionEvent`) — never use turnIndex as a cross-prompt counter.
+- Ordering: the in-flight turn's `turn_end` fires BEFORE your queued steer message is processed. To capture the response to your own message, arm capture on `message_start` matching your prompt text, then take the first text-bearing `turn_end` after it — arming up front grabs the in-flight reply instead.
+- `ctx.waitForIdle()` (and `agent.waitForIdle()`) resolves only after the whole activeRun settles, INCLUDING queued steer turns — not at the first idle moment.
+
 ## Free-model config updates (opencode)
 
 `opencode.json` at repo root → installed to `~/.config/opencode/opencode.json`. Free models change often; re-verify before editing.
