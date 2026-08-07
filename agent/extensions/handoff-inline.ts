@@ -8,8 +8,15 @@
  *
  *   1. Ask the current agent to produce the handoff document as its response
  *      text — no file is written anywhere.
- *   2. Capture that document (via the turn_end event).
+ *   2. Capture that document (via the turn_end event, armed only after the
+ *      handoff prompt is actually in the transcript).
  *   3. Open a NEW session seeded with the document as its opening context.
+ *
+ * The handoff prompt is sent with `deliverAs: "steer"` so it does not throw
+ * when the agent is already streaming (it is queued into the running loop).
+ * Capture is armed on `message_start` for our own steer message, NOT up front:
+ * otherwise the in-flight turn's `turn_end` would be captured as the handoff
+ * document before our prompt is even processed.
  *
  * The working session is left untouched in the session tree. The new session
  * starts clean with only the handoff as context, and the agent immediately
@@ -27,6 +34,7 @@
 import type {
 	ExtensionAPI,
 	ExtensionCommandContext,
+	MessageStartEvent,
 	TurnEndEvent,
 } from "@earendil-works/pi-coding-agent";
 
@@ -75,6 +83,18 @@ export default function (pi: ExtensionAPI) {
 	let capturing = false;
 	let handoffResolve: ((text: string) => void) | null = null;
 
+	// Arm capture only once OUR steer message is actually in the transcript.
+	// Without this, the in-flight turn's turn_end (fired before the queued steer
+	// message is processed) would be captured as the handoff document.
+	pi.on("message_start", (event: MessageStartEvent) => {
+		if (!handoffResolve || capturing) return;
+		if (event.message.role !== "user") return;
+		if (!extractText(event.message.content).includes(HANDOFF_BODY)) return;
+		// Our handoff prompt is now queued/being processed. The next text-bearing
+		// assistant turn is the handoff document.
+		capturing = true;
+	});
+
 	pi.on("turn_end", (event: TurnEndEvent) => {
 		if (!capturing || !handoffResolve) return;
 		// turn_end fires after EVERY assistant sub-turn, including intermediate
@@ -96,12 +116,16 @@ export default function (pi: ExtensionAPI) {
 		handler: async (args: string, ctx: ExtensionCommandContext) => {
 			const doc = await new Promise<string>((resolve) => {
 				handoffResolve = resolve;
-				capturing = true;
-				pi.sendUserMessage(buildPrompt(args));
+				capturing = false;
+				// deliverAs "steer": when the agent is already streaming this queues
+				// the prompt into the running loop instead of throwing "Agent is
+				// already processing". When idle it is ignored and the prompt is sent
+				// directly. Capture is armed by the message_start listener above.
+				pi.sendUserMessage(buildPrompt(args), { deliverAs: "steer" });
 				// Safety net: if the turn never produces a document, fail the
 				// command rather than leave the UI hanging.
 				setTimeout(() => {
-					if (!capturing) return;
+					if (!handoffResolve) return; // already resolved
 					capturing = false;
 					handoffResolve = null;
 					resolve("");
