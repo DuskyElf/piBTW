@@ -36,8 +36,15 @@
           "cost": { "input": 0, "output": 0 },
           "options": { "temperature": 0.2 }
         },
-        "ling-3.0-flash-free": {
-          "name": "Ling 3.0 Flash (Free)",
+        "ling-3.0-tiny-free": {
+          "name": "Ling 3.0 Tiny (Free)",
+          "reasoning": true,
+          "tool_call": true,
+          "cost": { "input": 0, "output": 0 },
+          "options": { "temperature": 0.2 }
+        },
+        "longcat-2.0-free": {
+          "name": "LongCat 2.0 (Free)",
           "reasoning": true,
           "tool_call": true,
           "cost": { "input": 0, "output": 0 },
@@ -66,6 +73,20 @@
       "models": {
         "gpt-oss-120b": {
           "name": "GPT-OSS 120B",
+          "reasoning": true,
+          "tool_call": true,
+          "limit": 30,
+          "options": { "reasoningEffort": "medium", "temperature": 0.2 }
+        },
+        "gemma-4-31b": {
+          "name": "Gemma 4 31B",
+          "reasoning": true,
+          "tool_call": true,
+          "limit": 30,
+          "options": { "reasoningEffort": "medium", "temperature": 0.2 }
+        },
+        "zai-glm-4.7": {
+          "name": "Z.AI GLM-4.7",
           "reasoning": true,
           "tool_call": true,
           "limit": 30,

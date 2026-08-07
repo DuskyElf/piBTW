@@ -83,6 +83,12 @@ Gotchas from debugging `agent/extensions/*.ts` against pi's ExtensionAPI. The in
 - Full catalog w/ pricing: `models.dev/api.json` (free = input/output cost 0)
 - Cerebras models + rate limits: `inference-docs.cerebras.ai/llms-full.txt` (free tier ~30 RPM / 1M TPD)
 
-Current picks: default `opencode/deepseek-v4-flash-free`, fast alt `cerebras/gpt-oss-120b` (only production model, ~3000 tok/s, set `limit: 30`), titles `opencode/north-mini-code-free`. Keys: `OPENCODE_API_KEY`, `CEREBRAS_API_KEY`. Per-model reasoning maps (7 levels: off/minimal/low/medium/high/xhigh/max) overridable in `agent/models.json` → `providers.<id>.modelOverrides.<model>.thinkingLevelMap`.
+**Cerebras specifics (separate provider, not in Zen):**
+- The Zen models list (`opencode.ai/zen/v1/models`) does NOT include Cerebras — query `models.dev/api.json` → `j.cerebras.models` instead (authoritative, has cost/reasoning/tool_call).
+- `inference-docs.cerebras.ai/llms-full.txt` is one giant doc; `models.dev/api.json` is easier to grep for IDs.
+- `gpt-oss-120b` has been the only/fastest production model; newer arrivals (gemma-4-31b, zai-glm-4.7) are PAID and pricier — keep the cheap gpt-oss default, add the others only if wanted.
+- Price check: gpt-oss-120b ~$0.35/$0.75 (cheapest), gemma-4-31b $0.99/$1.49, zai-glm-4.7 $2.25/$2.75.
+
+Current picks: default `opencode/deepseek-v4-flash-free`, fast alt `cerebras/gpt-oss-120b` (~3000 tok/s, set `limit: 30`), titles `opencode/north-mini-code-free`. Keys: `OPENCODE_API_KEY`, `CEREBRAS_API_KEY`. Per-model reasoning maps (7 levels: off/minimal/low/medium/high/xhigh/max) overridable in `agent/models.json` → `providers.<id>.modelOverrides.<model>.thinkingLevelMap`.
 
 **Sandbox quirk:** curl/wget die on bwrap in this env — use `node -e` + `https.get`.
