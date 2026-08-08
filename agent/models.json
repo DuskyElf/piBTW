@@ -1,5 +1,13 @@
 {
   "providers": {
+    "ollama-cloud": {
+      "baseUrl": "http://localhost:11434/v1",
+      "api": "openai-completions",
+      "apiKey": "ollama",
+      "models": [
+        { "id": "gemma4:cloud" }
+      ]
+    },
     "cerebras": {
       "modelOverrides": {
         "gpt-oss-120b": {
