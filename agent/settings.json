@@ -24,5 +24,23 @@
     "cerebras/gemma-4-31b"
   ],
   "hideThinkingBlock": false,
-  "theme": "dark"
+  "theme": "dark",
+  "skillInvocation": {
+    "ask-matt": false,
+    "commit-planner": false,
+    "edit-article": false,
+    "frontend-design": false,
+    "git-guardrails-claude-code": false,
+    "handoff": false,
+    "improve-codebase-architecture": false,
+    "librarian": false,
+    "migrate-to-shoehorn": false,
+    "obsidian-vault": false,
+    "resolving-merge-conflicts": false,
+    "scaffold-exercises": false,
+    "setup-matt-pocock-skills": false,
+    "setup-pre-commit": false,
+    "teach": false,
+    "writing-great-skills": false
+  }
 }
