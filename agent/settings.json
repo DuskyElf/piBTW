@@ -39,5 +39,8 @@
     "setup-pre-commit": false,
     "teach": false,
     "writing-great-skills": false
+  },
+  "webSearch": {
+    "workflow": "auto-summary"
   }
 }
