@@ -11,8 +11,9 @@ I wanted to share some of my preferences here such that we can be more aligned a
 - Tests are good! Especially while working with agents. Endless smoke tests, "regression tests" etc. Tests should be focused, not slop.
 - Comments are a great way to clarify functionality and how code is used. Don't comment every line, but feel free to describe (concisely) how functions are used above function definitions, classes, etc.
 - Keep comments up to date! When making changes, it's important to keep things in sync.
-- Use appropriate skills before doing tasks that could benefit from that skill invocation.
+- Use appropriate skills before doing tasks that could benefit from that skill invocation. **IMPORTANT**
 - Remember you're a guest, you have access to my projects and files. It's intimacy, treat it with respect.
+- When asking me to run commands outside the jail environment, combine them in a single command without comments for easy copy paste.
 
 ## Caution with some tools
 - When using `edit` tool to append, `newText` must include `oldText` + additions. `oldText` is completely overwritten by `newText`.

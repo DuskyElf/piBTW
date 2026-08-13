@@ -74,21 +74,12 @@ Gotchas from debugging `agent/extensions/*.ts` against pi's ExtensionAPI. The in
 - Ordering: the in-flight turn's `turn_end` fires BEFORE your queued steer message is processed. To capture the response to your own message, arm capture on `message_start` matching your prompt text, then take the first text-bearing `turn_end` after it — arming up front grabs the in-flight reply instead.
 - `ctx.waitForIdle()` (and `agent.waitForIdle()`) resolves only after the whole activeRun settles, INCLUDING queued steer turns — not at the first idle moment.
 
-## Free-model config updates (opencode)
+## Model Configuration & Auth
 
-`opencode.json` at repo root → installed to `~/.config/opencode/opencode.json`. Free models change often; re-verify before editing.
+We now rely primarily on Google Gemini (`google/*`) flash/lite models and open-weight Gemma 4 models using a Google API key, alongside Cerebras and Ollama cloud models.
 
-**Where to look (source of truth, in order):**
-- Zen free model IDs + pricing: `opencode.ai/docs/zen/` (ids end in `-free`, all limited-time, data may train the model)
-- Full catalog w/ pricing: `models.dev/api.json` (free = input/output cost 0)
-- Cerebras models + rate limits: `inference-docs.cerebras.ai/llms-full.txt` (free tier ~30 RPM / 1M TPD)
-
-**Cerebras specifics (separate provider, not in Zen):**
-- The Zen models list (`opencode.ai/zen/v1/models`) does NOT include Cerebras — query `models.dev/api.json` → `j.cerebras.models` instead (authoritative, has cost/reasoning/tool_call).
-- `inference-docs.cerebras.ai/llms-full.txt` is one giant doc; `models.dev/api.json` is easier to grep for IDs.
-- `gpt-oss-120b` has been the only/fastest production model; newer arrivals (gemma-4-31b, zai-glm-4.7) are PAID and pricier — keep the cheap gpt-oss default, add the others only if wanted.
-- Price check: gpt-oss-120b ~$0.35/$0.75 (cheapest), gemma-4-31b $0.99/$1.49, zai-glm-4.7 $2.25/$2.75.
-
-Current picks: default `opencode/deepseek-v4-flash-free`, fast alt `cerebras/gpt-oss-120b` (~3000 tok/s, set `limit: 30`), titles `opencode/north-mini-code-free`. Keys: `OPENCODE_API_KEY`, `CEREBRAS_API_KEY`. Per-model reasoning maps (7 levels: off/minimal/low/medium/high/xhigh/max) overridable in `agent/models.json` → `providers.<id>.modelOverrides.<model>.thinkingLevelMap`.
+- **Config Location**: Enabled models and default selections live in `agent/settings.json`.
+- **Model Discoverability**: Pi natively discovers Google Gemini models via `auth.json` (`google` api key); no manual overrides are needed in `agent/models.json` unless customizing thinking level maps or context windows.
+- **Cerebras & Other Providers**: Cerebras and Ollama models (`cerebras/gpt-oss-120b`, `cerebras/gemma-4-31b`, etc.) are configured in `settings.json` and `models.json` where specific parameter mapping is required.
 
 **Sandbox quirk:** curl/wget die on bwrap in this env — use `node -e` + `https.get`.
