@@ -1,7 +1,7 @@
 {
-  "lastChangelogVersion": "0.83.0",
-  "defaultProvider": "opencode",
-  "defaultModel": "big-pickle",
+  "lastChangelogVersion": "0.84.1",
+  "defaultProvider": "google",
+  "defaultModel": "gemini-3.5-flash-lite",
   "defaultThinkingLevel": "minimal",
   "retry": {
     "enabled": true,
@@ -12,16 +12,13 @@
     }
   },
   "enabledModels": [
-    "opencode/big-pickle",
-    "opencode/deepseek-v4-flash-free",
-    "opencode/mimo-v2.5-free",
-    "opencode/laguna-s-2.1-free",
-    "opencode/ling-3.0-flash-free",
-    "opencode/north-mini-code-free",
-    "opencode/nemotron-3-ultra-free",
-    "cerebras/gpt-oss-120b",
-    "cerebras/zai-glm-4.7",
-    "cerebras/gemma-4-31b"
+    "google/gemini-3.6-flash",
+    "google/gemini-3.5-flash",
+    "google/gemini-3.5-flash-lite",
+    "google/gemini-3.1-flash-lite",
+    "google/gemma-4-31b-it",
+    "google/gemma-4-26b-a4b-it",
+    "opencode/big-pickle"
   ],
   "hideThinkingBlock": false,
   "theme": "dark",

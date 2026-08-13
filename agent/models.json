@@ -5,7 +5,9 @@
       "api": "openai-completions",
       "apiKey": "ollama",
       "models": [
-        { "id": "gemma4:cloud" }
+        {
+          "id": "gemma4:cloud"
+        }
       ]
     },
     "cerebras": {
