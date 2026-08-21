@@ -1,8 +1,8 @@
 {
   "lastChangelogVersion": "0.84.2",
-  "defaultProvider": "google",
-  "defaultModel": "gemini-3.5-flash-lite",
-  "defaultThinkingLevel": "medium",
+  "defaultProvider": "opencode",
+  "defaultModel": "x-preview-f-free",
+  "defaultThinkingLevel": "high",
   "retry": {
     "enabled": true,
     "maxRetries": 5,
@@ -19,15 +19,16 @@
     "google/gemma-4-31b-it",
     "google/gemma-4-26b-a4b-it",
     "openrouter/free",
+    "opencode/x-preview-f-free",
+    "opencode/hy3-free",
+    "opencode/muse-spark-1.2-contributor-free",
     "opencode/big-pickle"
   ],
   "hideThinkingBlock": false,
   "theme": "dark",
   "skillInvocation": {
     "ask-matt": false,
-    "commit-planner": false,
     "edit-article": false,
-    "frontend-design": false,
     "git-guardrails-claude-code": false,
     "handoff": false,
     "improve-codebase-architecture": false,
@@ -39,7 +40,8 @@
     "setup-matt-pocock-skills": false,
     "setup-pre-commit": false,
     "teach": false,
-    "writing-great-skills": false
+    "writing-great-skills": false,
+    "frontend-design": false
   },
   "webSearch": {
     "workflow": "auto-summary"
