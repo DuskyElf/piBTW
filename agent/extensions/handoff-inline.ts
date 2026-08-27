@@ -10,7 +10,8 @@
  *      text — no file is written anywhere.
  *   2. Capture that document (via the turn_end event, armed only after the
  *      handoff prompt is actually in the transcript).
- *   3. Open a NEW session seeded with the document as its opening context.
+ *   3. Open a NEW session seeded with the document as a staged message and
+ *      wait for the user's next input before starting the LLM.
  *
  * The handoff prompt is sent with `deliverAs: "steer"` so it does not throw
  * when the agent is already streaming (it is queued into the running loop).
@@ -19,8 +20,8 @@
  * document before our prompt is even processed.
  *
  * The working session is left untouched in the session tree. The new session
- * starts clean with only the handoff as context, and the agent immediately
- * continues the work from it.
+ * starts clean with only the handoff staged as context — no LLM turn is
+ * triggered until the user sends the next message.
  *
  * The original file-writing handoff skill stays available as /skill:handoff.
  *
@@ -112,7 +113,7 @@ export default function (pi: ExtensionAPI) {
 
 	pi.registerCommand("handoff", {
 		description:
-			"Reset context: generate an in-memory handoff document (no file written) and continue in a fresh session seeded with it. Usage: /handoff [focus]",
+			"Reset context: generate an in-memory handoff document (no file written) and stage it in a fresh session — waits for your next message before continuing. Usage: /handoff [focus]",
 		handler: async (args: string, ctx: ExtensionCommandContext) => {
 			const doc = await new Promise<string>((resolve) => {
 				handoffResolve = resolve;
@@ -140,12 +141,17 @@ export default function (pi: ExtensionAPI) {
 				return;
 			}
 
-			// Open a clean new session and seed it with the document. All
-			// post-replacement work must happen inside withSession — the old
-			// ctx (and this extension instance) is invalidated after this.
+			// Open a clean new session and stage the document as a message without
+			// triggering an LLM turn. The handoff sits in the new session as
+			// context and the agent waits idle until the user sends the next
+			// message. All post-replacement work must happen inside withSession —
+			// the old ctx (and this extension instance) is invalidated after this.
 			await ctx.newSession({
 				withSession: async (ctx2) => {
-					await ctx2.sendUserMessage(doc);
+					await ctx2.sendMessage(
+						{ customType: "handoff", content: doc, display: true },
+						{ triggerTurn: false },
+					);
 				},
 			});
 		},
