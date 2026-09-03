@@ -82,4 +82,18 @@ We now rely primarily on Google Gemini (`google/*`) flash/lite models and open-w
 - **Model Discoverability**: Pi natively discovers Google Gemini models via `auth.json` (`google` api key); no manual overrides are needed in `agent/models.json` unless customizing thinking level maps or context windows.
 - **Cerebras & Other Providers**: Cerebras and Ollama models (`cerebras/gpt-oss-120b`, `cerebras/gemma-4-31b`, etc.) are configured in `settings.json` and `models.json` where specific parameter mapping is required.
 
+### Updating Opencode Zen models (guidance, not gospel)
+
+Free models churn fast. Don't treat any list here as fixed.
+
+When asked to refresh Opencode Zen:
+
+1. **Sources to check** (in order): live API `https://opencode.ai/zen/v1/models` (auth with `opencode` key from `agent/auth.json`), docs at `https://opencode.ai/docs/zen/` (pricing/free table + endpoint table), and pi's bundled catalog at `/nix/store/*-pi-coding-agent-*/lib/node_modules/pi-monorepo/node_modules/@earendil-works/pi-ai/dist/providers/data/opencode.json`.
+2. **Verify live** — listing ≠ working. Probe `POST /zen/v1/chat/completions` (for `openai-completions` models) and `POST /zen/v1/responses` (for `openai-responses` like `muse-spark-*`) with a tiny `max_tokens`/`max_output_tokens`. Watch for `401 Model is not supported`, `400 Model is unavailable`, or `429 FreeUsageLimitError` (429 means it exists, just rate-limited). `hy3-free` and `deepseek-v4-flash-free` looked listed but were dead recently.
+3. **What to update**:
+   - `agent/settings.json` `enabledModels`: add/remove `opencode/<id>` for quick-switch (`/model`). Keep the list to actually-working free models.
+   - `agent/models.json` `providers.opencode.models[]`: only needed for models missing from pi's bundled catalog (e.g. `laguna-s-2.1-free`, `muse-spark-1.3-contributor-free` were absent in 0.84.4). Copy `api`/`baseUrl`/`compat` from docs or the live catalog when you add one.
+   - `providers.opencode.modelOverrides`: only if you need a custom `thinkingLevelMap` (e.g. muse-spark wants `minimal`/`xhigh`). Otherwise pi's defaults are fine.
+4. **Keep it loose**: prefer the live check over this doc. If docs and API disagree, trust the live probe and note it.
+
 **Sandbox quirk:** curl/wget die on bwrap in this env — use `node -e` + `https.get`.

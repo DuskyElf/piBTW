@@ -20,7 +20,7 @@ I wanted to share some of my preferences here such that we can be more aligned a
 1 When using `edit` tool to append, `newText` must include `oldText` + additions. `oldText` is completely overwritten by `newText`.
 2 MUST fire tools in parallel & bundle multiple bash commands into one tool call. `web_search` is a notable exception, that tool breaks under concurrent calls.
 3 Treat bash as a full programming language. Do pipes, process substitutions, complex filters, loops, inline scripts, all what you want.
-4 Use inline JavaScript and run it with node for needing to process data needing web access, use fetch() in node instead of curl in bash.
+4 curl/wget die on bwrap in this env — use `node -e` with `fetch()` or `https.get` for web access, and inline JS via node for data processing, instead of curl/bash
 
 ## Environmental constrains
 1 All applications are jailed in bubblewrap, including pi.

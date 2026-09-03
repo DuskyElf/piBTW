@@ -1,8 +1,8 @@
 {
-  "lastChangelogVersion": "0.84.2",
+  "lastChangelogVersion": "0.84.4",
   "defaultProvider": "opencode",
-  "defaultModel": "x-preview-f-free",
-  "defaultThinkingLevel": "high",
+  "defaultModel": "muse-spark-1.2-contributor-free",
+  "defaultThinkingLevel": "medium",
   "retry": {
     "enabled": true,
     "maxRetries": 5,
@@ -19,10 +19,14 @@
     "google/gemma-4-31b-it",
     "google/gemma-4-26b-a4b-it",
     "openrouter/free",
-    "opencode/x-preview-f-free",
-    "opencode/hy3-free",
+    "opencode/big-pickle",
+    "opencode/laguna-s-2.1-free",
+    "opencode/ling-3.0-flash-fin-free",
+    "opencode/mimo-v2.5-free",
     "opencode/muse-spark-1.2-contributor-free",
-    "opencode/big-pickle"
+    "opencode/muse-spark-1.3-contributor-free",
+    "opencode/nemotron-3-ultra-free",
+    "opencode/nemotron-3.5-lightning-free"
   ],
   "hideThinkingBlock": false,
   "theme": "dark",
