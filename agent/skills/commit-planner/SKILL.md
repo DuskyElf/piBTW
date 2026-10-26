@@ -3,8 +3,8 @@ name: commit-planner
 description: Suggests PR & commit messages. Use before commiting or filing a PR.
 ---
 
-You don't have access to the auth credentials of `gh` tool or my ssh keys to sign commit or push, ask me to run such commands outside of the sandbox for you.
-Before filing a PR, check weather a PR for this branch already exists. Review the diff locally against `origin/main` (or `upstream/master` etc) to make sure its contents match the goal.
+You run unjailed with my keys and gh auth available. Sign commits by default with `git commit -S`. Push only when asked. Never commit agent state, lock noise, or session files.
+Before filing a PR, check whether a PR for this branch already exists. Review the diff locally against `origin/main` (or `upstream/master` etc) to make sure its contents match the goal.
 
 PR titles usually become commit messages, so follow repository's title conventions. Look at recent git history for examples.
 Prefer conventional commits if not stated otherwise.
